@@ -8,6 +8,10 @@ module Spec
           end
           example(description, options, backtrace, &implementation_with_performance_loop)
         end
+        
+        def calculate_average(sample_size, current_average, new_value)
+          (sample_size * current_average + new_value) / (sample_size + 1)
+        end
       end
     end
   end
