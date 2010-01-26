@@ -17,16 +17,22 @@ end
 
 module Spec::Performance::Runner
   class TestReporter < Spec::Runner::Reporter
-    attr_reader :example_failures
+    attr_reader :example_failures, :example_successes  
 
     def initialize(options)
       super(options)
       @example_failures = []
+      @example_successes = []
     end
 
     def example_failed(example, error)
       @example_failures << { :example => example, :error => error }
     end
+
+    def example_passed(example)
+      @example_successes << example
+    end
+
   end
 end
 
@@ -43,4 +49,13 @@ def with_sandboxed_options
   end
 
   yield
+end
+
+class Array
+  def sum(&block)
+    inject(0.0) do |acc, x|
+      acc += block_given? ? yield(x) : x
+      acc
+    end
+  end
 end
