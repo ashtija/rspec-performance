@@ -1,5 +1,3 @@
-require 'ruby-debug'
-
 module Spec
   module Performance
     module Example
