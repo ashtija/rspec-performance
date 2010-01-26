@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = "Ruby based make-like utility."
   s.name = "rspec-performance"
-  s.version = Spec::Performance::VERSION.to_s
+  s.version = Spec::Performance::VERSION::STRING
   s.requirements << "rspec-1.2.6"
   s.require_path = "lib"
   s.files = Dir["lib/**/*.rb"] + Dir["spec/**/*.rb"] + ["Rakefile", "README"]
