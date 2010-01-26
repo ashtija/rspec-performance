@@ -82,18 +82,18 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
 
           # TODO: Use :rr stubbing - BR/HM
           def stub_timed_operation_1(example_group)
-            example_group.instance_eval do
-              def timed_operation(label, &block)
+            example_group.class_eval do
+              def _timed_operation(label, &block)
                 1.0
               end
             end
           end
 
           def stub_timed_operation_2(example_group)
-            example_group.instance_eval do
-              def timed_operation(label, &block)
+            example_group.class_eval do
+              def _timed_operation(label, &block)
                 yield
-                label == Spec::Performance::Example::PerformanceExampleGroupMethods::ITERATION_RUN_TIME ? 0.2 : 1.0
+                label == Spec::Performance::Example::PerformanceExampleGroupMethods::ITERATION_RUN_TIME_LABEL ? 0.2 : 1.0
               end
             end
           end
@@ -145,8 +145,9 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
         @current_average = sample.inject(0.0) {|acc, x| acc += x; acc } / sample.size
       end
 
-      it "should calculate average correctly" do
-        example_group.calculate_average(sample.size, current_average, 7).should == expected_average
+      it "calculates averages correctly" do
+        example = example_group.new(fake_run_options)
+        example.send(:_calculate_average, sample.size, current_average, 7).should == expected_average
       end
     end
 
@@ -161,7 +162,8 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
       end
 
       it "returns the elapsed time of execution for a block" do
-        elapsed_time = example_group.timed_operation("foo") {}
+        example = example_group.new(fake_run_options)
+        elapsed_time = example.send(:_timed_operation, "foo") {}
         elapsed_time.should be_a(Float)
         elapsed_time.should == 1.0
       end
