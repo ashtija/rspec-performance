@@ -81,13 +81,13 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
           end
 
           # TODO: Use :rr stubbing - BR/HM
-          def stub_timed_operation_1(example_group)
-            example_group.class_eval do
-              def _timed_operation(label, &block)
-                1.0
-              end
-            end
-          end
+#          def stub_timed_operation_1(example_group)
+#            class Spec::Performance::Example::PerformanceExecutionBuilder
+#              def _timed_operation(label, &block)
+#                1.0
+#              end
+#            end
+#          end
 
           def stub_timed_operation_2(example_group)
             example_group.class_eval do
@@ -104,7 +104,8 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
             end
 
             it "fails when it does not match on iterations per second" do
-              stub_timed_operation_1(example_group)
+#              stub_timed_operation_1(example_group)
+              stub.instance_of(Spec::Performance::Example::PerformanceExecutionBuilder)._timed_operation { puts "called it"; 1.0 }
 
               example_group.perform("do performance loop", spec_options) {}
               example_group.run(fake_run_options)
