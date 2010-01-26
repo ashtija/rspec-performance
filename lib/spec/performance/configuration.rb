@@ -1,34 +1,48 @@
 module Spec
   module Performance
     class Configuration
-      attr_accessor :max_request_median, :iterations, :concurrency, :min_requests_per_second
+      attr_reader :options
 
-      DEFAULT_MAX_REQUEST_MEDIAN      = 1000
-      DEFAULT_ITERATIONS              = 20
-      DEFAULT_CONCURRENCY             = 1
-      DEFAULT_MIN_REQUESTS_PER_SECOND = 40
-
-      def initialize
-        @max_request_median      = DEFAULT_MAX_REQUEST_MEDIAN
-        @iterations              = DEFAULT_ITERATIONS
-        @concurrency             = DEFAULT_CONCURRENCY
-        @min_requests_per_second = DEFAULT_MIN_REQUESTS_PER_SECOND
+      def initialize(options)
+        @options = options
       end
 
-      def to_hash
-        instance_variables.inject({}) do |acc, variable|
-          acc[variable[1..-1].to_sym] = instance_variable_get(variable)
-          acc
-        end
+      def concurrency=(value)
+        @options[:concurrency] = value
+      end
+
+      def iterations=(value)
+        @options[:iterations] = value
+      end
+
+      def iterations_per_second=(value)
+        @options[:iterations_per_second] = value
+      end
+
+      def mean_iteration_iterval=(value)
+        @options[:mean_iteration_iterval] = value
       end
 
       class << self
         def instance
-          @@instance ||= new
+          @@instance ||= new(default_options)
         end
 
         def configure(&block)
-          block.call(instance)
+          yield(instance)
+        end
+
+        def configured_options
+          instance.options
+        end
+
+        def default_options
+          {
+              :concurrency => 1,
+              :iterations => 20,
+              :iterations_per_second => nil,
+              :mean_iteration_iterval => nil
+          }
         end
       end
     end
