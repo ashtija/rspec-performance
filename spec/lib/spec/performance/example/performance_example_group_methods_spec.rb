@@ -74,30 +74,65 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
       end
 
       context "pass or fail reporting" do
-        attr_reader :spec_options
-        before do
-          @spec_options = { :concurrency => 1, :iterations => 2, :iterations_per_second => 3, :mean_iteration_iterval => nil }
-        end
+        describe "when the spec should fail" do
+          attr_reader :spec_options
+          before do
+            @spec_options = { :concurrency => 1, :iterations => 2, :iterations_per_second => nil, :mean_iteration_iterval => nil }
+          end
 
-        it "fails when it does not match on iterations per second" do
           # TODO: Use :rr stubbing - BR/HM
-          example_group.instance_eval do
-            def timed_operation(label, &block)
-              1.0
+          def stub_timed_operation_1(example_group)
+            example_group.instance_eval do
+              def timed_operation(label, &block)
+                1.0
+              end
             end
           end
-          example_group.timed_operation("FOO") {}.should == 1.0
 
-          example_group.perform("do performance loop", spec_options) {}
-          example_group.run(fake_run_options)
+          def stub_timed_operation_2(example_group)
+            example_group.instance_eval do
+              def timed_operation(label, &block)
+                yield
+                label == Spec::Performance::Example::PerformanceExampleGroupMethods::ITERATION_RUN_TIME ? 0.2 : 1.0
+              end
+            end
+          end
 
-          fake_run_options.reporter.example_failures.should_not be_empty
+          describe "when the iterations_per_second configuration option is set" do
+            before do
+              spec_options.merge!({ :iterations_per_second => 3 })
+            end
+
+            it "fails when it does not match on iterations per second" do
+              stub_timed_operation_1(example_group)
+
+              example_group.perform("do performance loop", spec_options) {}
+              example_group.run(fake_run_options)
+
+              fake_run_options.reporter.example_failures.should_not be_empty
+              error = fake_run_options.reporter.example_failures.first[:error]
+              error.should be_a(Spec::Expectations::ExpectationNotMetError)
+            end
+          end
+
+          describe "when the mean_iteration_interval configuration option is set" do
+            before do
+              spec_options.merge!({ :iterations => 5, :mean_iteration_interval => 0.100 })
+            end
+
+            it "fails when the mean_iteration_interval falls below the configured value" do
+              stub_timed_operation_2(example_group)
+
+              example_group.perform("do performance loop", spec_options) {}
+              example_group.run(fake_run_options)
+
+              fake_run_options.reporter.example_failures.should_not be_empty
+              error = fake_run_options.reporter.example_failures.first[:error]
+              error.should be_a(Spec::Expectations::ExpectationNotMetError)
+            end
+          end
         end
       end
-
-
-#    it "fails when the mean iteration execution time does not land at or below the configured maximum mean iteration execution time"
-
     end
 
     describe ".calculate_average" do
@@ -133,3 +168,4 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
     end
   end
 end
+
