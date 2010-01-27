@@ -10,6 +10,9 @@ $:.unshift(File.dirname(__FILE__) + "/../lib")
 dir = File.dirname(__FILE__)
 
 require "rspec-performance"
+require "#{dir}/helpers/integration_server"
+
+IntegrationServer.port = 8888
 
 Spec::Runner.configure do |config|
   config.mock_with :rr
@@ -59,3 +62,4 @@ class Array
     end
   end
 end
+

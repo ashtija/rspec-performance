@@ -44,9 +44,10 @@ class GrockitPerformanceClient < CometPerformanceClient
   end
 end
 
-Spec::Performance::Configuration.configure |conf|
+Spec::Performance::Configuration.configure do |conf|
   conf.driver = GrockitHttpClient
   conf.mean_iteration_interval = 1
+  conf.iterations = 20
 end
 
 describe "app_server - basic page request - reentrant page request" do
@@ -56,6 +57,10 @@ describe "app_server - basic page request - reentrant page request" do
 
   perform "a basic single page load test" do
     driver.get "http://localhost/dashboard"
+  end
+
+  perform "passes the load test" do
+    driver.get("http://localhost/dashboard")
   end
 
   perform "a concurrent single page load test", :concurrency => 2 do
@@ -81,7 +86,7 @@ describe "app_server - more involved setup - non-reentrant page request" do
     end
 
     perform "correct credit cards", :concurrency => 2 do
-      driver.post "http://localhost/orders"
+      driver.post "http://localhost/orders", :valid_order_params
     end
   end
 end
