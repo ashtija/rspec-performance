@@ -8,6 +8,7 @@ describe Spec::Performance::Configuration do
       options.has_key?(:iterations)
       options.has_key?(:iterations_per_second)
       options.has_key?(:mean_iteration_iterval)
+      options.has_key?(:performance_driver_class)
     end
   end
 
@@ -24,6 +25,7 @@ describe Spec::Performance::Configuration do
       configured_options[:iterations_per_second].should == 20000
       configured_options[:mean_iteration_iterval].should == default_options[:mean_iteration_iterval]
       configured_options[:iterations].should == default_options[:iterations]
+      configured_options[:performance_driver_class].should == default_options[:performance_driver_class]
     end
   end
 

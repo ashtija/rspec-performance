@@ -45,26 +45,26 @@ class GrockitPerformanceClient < CometPerformanceClient
 end
 
 Spec::Performance::Configuration.configure do |conf|
-  conf.driver = GrockitHttpClient
+  conf.performance_driver = GrockitHttpClient
   conf.mean_iteration_interval = 1
   conf.iterations = 20
 end
 
 describe "app_server - basic page request - reentrant page request" do
   before do
-    driver.login_as "bob", "password"
+    performance_driver.login_as "bob", "password"
   end
 
   perform "a basic single page load test" do
-    driver.get "http://localhost/dashboard"
+    performance_driver.get "http://localhost/dashboard"
   end
 
   perform "passes the load test" do
-    driver.get("http://localhost/dashboard")
+    performance_driver.get("http://localhost/dashboard")
   end
 
   perform "a concurrent single page load test", :concurrency => 2 do
-    driver.get "http://localhost/dashboard"
+    performance_driver.get "http://localhost/dashboard"
   end
 end
 
@@ -73,20 +73,20 @@ describe "app_server - more involved setup - non-reentrant page request" do
     attr_reader :valid_order_params
     before do
       @valid_order_params = { :credit_card => 4111111111111111, :full_name => "Bob Bing Bong", :ccv => 123 }
-      driver.login_as "bob", "password"
+      performance_driver.login_as "bob", "password"
 
       # If this is mixed in with rspec-rails, can we use actual rails paths created from the router?
-      driver.order_new_path
+      performance_driver.order_new_path
     end
 
     # Time to run this should not count against example_run_time
     after_iteration do
-      order_id = driver.find_order_id
+      order_id = performance_driver.find_order_id
       Order.destroy! order_id
     end
 
     perform "correct credit cards", :concurrency => 2 do
-      driver.post "http://localhost/orders", :valid_order_params
+      performance_driver.post "http://localhost/orders", :valid_order_params
     end
   end
 end
@@ -99,6 +99,7 @@ describe "game_server - basic game operation" do
   perform "answering a question with multiple users" do
     concurrently do
       as "bob" do
+      end
       end
 
       as "bill" do

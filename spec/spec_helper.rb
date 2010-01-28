@@ -24,8 +24,7 @@ module Spec::Performance::Runner
 
     def initialize(options)
       super(options)
-      @example_failures = []
-      @example_successes = []
+      reset
     end
 
     def example_failed(example, error)
@@ -36,6 +35,10 @@ module Spec::Performance::Runner
       @example_successes << example
     end
 
+    def reset
+      @example_failures = []
+      @example_successes = []
+    end
   end
 end
 

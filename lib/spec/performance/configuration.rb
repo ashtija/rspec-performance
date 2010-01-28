@@ -23,6 +23,10 @@ module Spec
         @options[:mean_iteration_iterval] = value
       end
 
+      def performance_driver_class=(value)
+        @options[:performance_driver_class] = value
+      end
+
       class << self
         def instance
           @@instance ||= new(default_options)
@@ -41,7 +45,8 @@ module Spec
               :concurrency => 1,
               :iterations => 20,
               :iterations_per_second => nil,
-              :mean_iteration_iterval => nil
+              :mean_iteration_iterval => nil,
+              :performance_driver_class => Spec::Performance::Client::HttpClient
           }
         end
       end
