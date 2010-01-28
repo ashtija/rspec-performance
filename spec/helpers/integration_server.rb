@@ -36,6 +36,10 @@ class IntegrationServer
         map "/hello" do
           run HelloAdapter.new
         end
+
+        map "/cookie_echo" do
+          run CookieEchoAdapter.new
+        end
       end
     end
     sleep 0.010 unless @server && @server.running?
@@ -51,6 +55,18 @@ class IntegrationServer
     def call(env)
       body = ["<html><head><title>hi!</title></head><body>hello</body</html>"]
       [ 200, { 'Content-Type' => 'text/html' }, body ]
+    end
+  end
+
+  class CookieEchoAdapter
+    def call(env)
+      cookies = env["rack.input"].read.split(/&/).inject([]) do |acc, pair|
+        name, value = pair.split(/=/).map {|p| CGI::unescape(p) }
+        acc << CGI::Cookie.new(name, value).to_s
+        acc
+      end
+      cookie_string = cookies.join("\n")
+      [200, { "Set-Cookie" => cookie_string }, ["echo"]]
     end
   end
 end

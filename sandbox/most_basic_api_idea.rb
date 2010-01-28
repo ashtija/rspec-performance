@@ -1,3 +1,10 @@
+Spec::Performance::Configuration.configure do |conf|
+  conf.driver = GrockitHttpClient
+  conf.max_acceptable_iteration_time = 1.second
+#  conf.mean_iteration_interval = 1
+  conf.iterations = 20
+end
+
 describe "app_server - more involved setup - non-reentrant page request" do
   before do
     response = driver.post "http://localhost/login", "username", "password"
@@ -21,7 +28,7 @@ describe "app_server - more involved setup - non-reentrant page request" do
       # driver.restore - this restores the drivers last known state
     end
 
-    perform "correct credit cards", :concurrency => 2 do
+    perform "correct credit cards" do
       response = driver.post "http://localhost/orders", :valid_order_params
       response.should be_success
     end
