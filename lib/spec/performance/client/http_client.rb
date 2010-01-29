@@ -21,22 +21,30 @@ module Spec
         end
 
         def get(uri, params = {})
-#          response = Net::HTTP.start(uri.host, uri.port) do |http|
-#            p http.class
-#            http.get(uri.request_uri, headers)
-#          end
+          if params && params.size > 0
+            query = params2query(params)
+            uri = URI.parse("#{uri}?#{query}")
+          end
 
           http = Net::HTTP.start(uri.host, uri.port)
           response = http.get(uri.request_uri, headers)
           http.finish
-          response
+
+          create_http_client_response(response)
         end
 
         def recording?
-          @recording 
+          @recording
         end
 
         private
+
+        def params2query(hash)
+          q = hash.inject([]) do |acc, (k, v)|
+            acc << CGI::escape(k.to_s) + "=" + CGI::escape(v.to_s)
+          end.join("&")
+        end
+
         def capture(response)
           if raw_cookies = response.get_fields("Set-Cookie")
             cookie_jar = raw_cookies.inject({}) do |parsed_cookies, raw_cookie_string|

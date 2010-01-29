@@ -21,27 +21,30 @@ describe Spec::Performance::Client::HttpClient do
   describe "#post" do
     attr_reader :uri, :params
     before do
-      @uri = URI.parse(File.join(IntegrationServer.base_url, "hello"))
+      @uri = URI.join(IntegrationServer.base_url, "hello")
       @params = { :foo => "bar", :baz => "quux" }
     end
 
     it "makes an HTTP post" do
-      mock.proxy(Net::HTTP).post_form(uri, params)
-      client.post(uri, params).should be_success
+
+      # FIX THIS SO IT USES COOKIES
+      
+      mock.proxy(Net::HTTP).post_form(uri, hash)
+      client.post(uri, hash).should be_success
     end
 
     it "returns a response object" do
-      client.post(uri, params).should be_a(Spec::Performance::Client::Response)
+      client.post(uri, hash).should be_a(Spec::Performance::Client::Response)
     end
 
     describe "when the client is recording" do
       before do
-        @uri = URI.parse(File.join(IntegrationServer.base_url, "cookie_echo"))
+        @uri = URI.join(IntegrationServer.base_url, "cookie_echo")
         client.should be_recording
       end
 
       it "captures the cookie from the response" do
-        client.post(uri, params).should be_success
+        client.post(uri, hash).should be_success
         client.cookies[:foo].value.first.should == "bar"
         client.cookies[:baz].value.first.should == "quux"
       end
@@ -49,13 +52,13 @@ describe Spec::Performance::Client::HttpClient do
 
     describe "when the client is not recording" do
       before do
-        @uri = URI.parse(File.join(IntegrationServer.base_url, "cookie_echo"))
+        @uri = URI.join(IntegrationServer.base_url, "cookie_echo")
         client.recording = false
         client.should_not be_recording
       end
 
       it "does not capture cookies" do
-        client.post(uri, params).should be_success
+        client.post(uri, hash).should be_success
         client.cookies.should_not have_key(:foo)
         client.cookies.should_not have_key(:baz)
       end
@@ -63,8 +66,10 @@ describe Spec::Performance::Client::HttpClient do
   end
 
   describe "#get" do
+    attr_reader :uri, :params
     before do
-      @params = {}
+      @params = { :monster_truck => "Truckasaurus", :us_president => "Grover Cleveland" }
+      @uri = URI.join(IntegrationServer.base_url, "hello")
     end
 
     it "sends an HTTP get request, sending the current cookies" do
@@ -73,14 +78,24 @@ describe Spec::Performance::Client::HttpClient do
       client.cookies   = { "cookie-name".to_sym => expected_cookie }
 
       mock_http = Object.new
-      mock(Net::HTTP).start("example.com", 80) { mock_http }
-      mock(mock_http).get("/something?monster_truck=Truckasaurus&us_president=Grover%20Cleveland", expected_headers)
+      mock(Net::HTTP).start("localhost", 8888) { mock_http }
+      mock(mock_http).get(anything, expected_headers) do |request_uri, headers|
+        request_uri.index("/hello?").should == 0
+        request_uri.should include("monster_truck=Truckasaurus")
+        request_uri.should include("us_president=Grover+Cleveland")
+        request_uri.should include("&")
+
+        stub(Net::HTTPResponse.new(1.1, 200, nil)).body { "stubbed response body" }
+      end
       mock(mock_http).finish
 
-      client.get(URI.parse("http://example.com/something?monster_truck=Truckasaurus&us_president=Grover%20Cleveland"))
+      response = client.get(uri, params)
     end
 
     it "returns a response object" do
+      response = client.get(uri, params)
+      response.should be_a(Spec::Performance::Client::Response)
+      response.should be_success
     end
 
     describe "when the client is recording" do
@@ -89,7 +104,7 @@ describe Spec::Performance::Client::HttpClient do
     end
 
     describe "when the client is not recording" do
-      it "it does not capture" do
+      it "does not capture" do
       end
     end
   end
