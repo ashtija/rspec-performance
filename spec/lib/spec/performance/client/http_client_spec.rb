@@ -67,10 +67,17 @@ describe Spec::Performance::Client::HttpClient do
       @params = {}
     end
 
-    it "makes an HTTP get" do
-      # sends the cookies that have been recorded
-      # sends the current headers
-      # sends the params that we specified
+    it "sends an HTTP get request, sending the current cookies" do
+      expected_cookie  = CGI::Cookie.new("cookie-name", "cookie-value")
+      expected_headers = { "Cookie" => expected_cookie.to_s }
+      client.cookies   = { "cookie-name".to_sym => expected_cookie }
+
+      mock_http = Object.new
+      mock(Net::HTTP).start("example.com", 80) { mock_http }
+      mock(mock_http).get("/something?monster_truck=Truckasaurus&us_president=Grover%20Cleveland", expected_headers)
+      mock(mock_http).finish
+
+      client.get(URI.parse("http://example.com/something?monster_truck=Truckasaurus&us_president=Grover%20Cleveland"))
     end
 
     it "returns a response object" do

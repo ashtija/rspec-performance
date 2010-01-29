@@ -7,20 +7,29 @@ module Spec
     module Client
       class HttpClient
         attr_writer :recording
-        attr_reader :cookies
+        attr_accessor :cookies
 
         def initialize
           @cookies = {}
           @recording = true
         end
 
-        def post(uri, params)
+        def post(uri, params = {})
           response = Net::HTTP.post_form(uri, params)
           capture(response) if recording?
           create_http_client_response(response)
         end
 
-        def get(uri, params)
+        def get(uri, params = {})
+#          response = Net::HTTP.start(uri.host, uri.port) do |http|
+#            p http.class
+#            http.get(uri.request_uri, headers)
+#          end
+
+          http = Net::HTTP.start(uri.host, uri.port)
+          response = http.get(uri.request_uri, headers)
+          http.finish
+          response
         end
 
         def recording?
@@ -37,6 +46,13 @@ module Spec
               parsed_cookies
             end
             @cookies.merge!(cookie_jar)
+          end
+        end
+
+        def headers
+          @cookies.values.inject({}) do |acc, cookie|
+            acc["Cookie"] = cookie.to_s
+            acc
           end
         end
 
