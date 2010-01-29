@@ -5,7 +5,7 @@ describe Spec::Performance::Example::PerformanceExampleGroup do
 
     attr_reader :example_group, :fake_run_options, :spec_options
     before do
-      @spec_options = { :iterations => 1, :concurrency => 1, :mean_iteration_interval => 1, :iterations_per_second => 1 }
+      @spec_options = { :iterations => 1, :concurrency => 1, :maximum_iteration_time => 1, :iterations_per_second => 1 }
       @example_group = Class.new(Spec::Performance::Example::PerformanceExampleGroup)
       @fake_run_options = ::Spec::Runner::Options.new(StringIO.new, StringIO.new)
       Spec::Performance::Runner::TestReporter.new(fake_run_options)

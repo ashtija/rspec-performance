@@ -8,7 +8,7 @@ describe Spec::Performance::Example::PerformanceExecutionBuilder do
     describe ".performance_proc" do
       context "performance loop" do
         before do
-          @spec_options = { :concurrency => 2, :iterations => 10, :iterations_per_second => nil, :mean_iteration_iterval => nil }
+          @spec_options = { :concurrency => 2, :iterations => 10, :iterations_per_second => nil, :maximum_iteration_time => nil }
         end
 
         it "runs the performance loop N times where N is equal to iterations divided by concurrency" do
@@ -33,7 +33,7 @@ describe Spec::Performance::Example::PerformanceExecutionBuilder do
           attr_reader :builder
 
           before do
-            @spec_options = { :concurrency => 1, :iterations => 2, :iterations_per_second => nil, :mean_iteration_iterval => nil }
+            @spec_options = { :concurrency => 1, :iterations => 2, :iterations_per_second => nil, :maximum_iteration_time => nil }
           end
 
           describe "when the iterations_per_second configuration option is set" do
@@ -51,9 +51,9 @@ describe Spec::Performance::Example::PerformanceExecutionBuilder do
             end
           end
 
-          describe "when the mean_iteration_interval configuration option is set" do
+          describe "when the maximum_iteration_time configuration option is set" do
             before do
-              spec_options.merge!({ :iterations => 5, :mean_iteration_interval => 0.100 })
+              spec_options.merge!({ :iterations => 5, :maximum_iteration_time => 0.100 })
               @builder = Spec::Performance::Example::PerformanceExecutionBuilder.new(spec_options)
             end
 
@@ -66,7 +66,7 @@ describe Spec::Performance::Example::PerformanceExecutionBuilder do
               end
             end
 
-            it "fails when the mean_iteration_interval falls below the configured value" do
+            it "fails when the maximum_iteration_time falls below the configured value" do
               stub(builder)._timed_operation(anything, &create_stub_impl)
 
               lambda do

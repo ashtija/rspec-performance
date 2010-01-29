@@ -46,7 +46,7 @@ end
 
 Spec::Performance::Configuration.configure do |conf|
   conf.performance_driver = GrockitHttpClient
-  conf.mean_iteration_interval = 1
+  conf.maximum_iteration_time = 1
   conf.iterations = 20
 end
 

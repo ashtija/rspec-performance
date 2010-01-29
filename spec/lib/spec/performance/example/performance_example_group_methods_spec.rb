@@ -38,7 +38,7 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
       context "execution context" do
         attr_reader :spec_options
         before do
-          @spec_options = { :concurrency => 2, :iterations => 10, :iterations_per_second => nil, :mean_iteration_iterval => nil }
+          @spec_options = { :concurrency => 2, :iterations => 10, :iterations_per_second => nil, :maximum_iteration_time => nil }
         end
 
         it "executes the performance loop in the same context as the other examples" do
@@ -78,7 +78,7 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
         describe "when a performance test passes" do
           attr_reader :spec_options
           before do
-            @spec_options = { :iterations => 1, :concurrency => 1, :mean_iteration_interval => 100000 }
+            @spec_options = { :iterations => 1, :concurrency => 1, :maximum_iteration_time => 100000 }
           end
 
           it "reports the success" do

@@ -19,8 +19,8 @@ module Spec
         @options[:iterations_per_second] = value
       end
 
-      def mean_iteration_iterval=(value)
-        @options[:mean_iteration_iterval] = value
+      def maximum_iteration_time=(value)
+        @options[:maximum_iteration_time] = value
       end
 
       def performance_driver_class=(value)
@@ -45,7 +45,7 @@ module Spec
               :concurrency => 1,
               :iterations => 20,
               :iterations_per_second => nil,
-              :mean_iteration_iterval => nil,
+              :maximum_iteration_time => nil,
               :performance_driver_class => Spec::Performance::Client::HttpClient
           }
         end
