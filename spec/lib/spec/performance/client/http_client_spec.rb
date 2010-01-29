@@ -26,15 +26,15 @@ describe Spec::Performance::Client::HttpClient do
     end
 
     it "makes an HTTP post" do
-
-      # FIX THIS SO IT USES COOKIES
-      
-      mock.proxy(Net::HTTP).post_form(uri, hash)
-      client.post(uri, hash).should be_success
+      mock.instance_of(Net::HTTP).request(anything) do |request|
+        request.should be_a(Net::HTTP::Post)
+        stub(Net::HTTPResponse.new(1.1, 200, nil)).body { "stubbed response body" }        
+      end
+      client.post(uri, params).should be_success
     end
 
     it "returns a response object" do
-      client.post(uri, hash).should be_a(Spec::Performance::Client::Response)
+      client.post(uri, params).should be_a(Spec::Performance::Client::Response)
     end
 
     describe "when the client is recording" do
@@ -44,7 +44,7 @@ describe Spec::Performance::Client::HttpClient do
       end
 
       it "captures the cookie from the response" do
-        client.post(uri, hash).should be_success
+        client.post(uri, params).should be_success
         client.cookies[:foo].value.first.should == "bar"
         client.cookies[:baz].value.first.should == "quux"
       end
@@ -58,7 +58,7 @@ describe Spec::Performance::Client::HttpClient do
       end
 
       it "does not capture cookies" do
-        client.post(uri, hash).should be_success
+        client.post(uri, params).should be_success
         client.cookies.should_not have_key(:foo)
         client.cookies.should_not have_key(:baz)
       end

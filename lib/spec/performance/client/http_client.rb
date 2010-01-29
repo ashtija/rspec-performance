@@ -15,7 +15,12 @@ module Spec
         end
 
         def post(uri, params = {})
-          response = Net::HTTP.post_form(uri, params)
+          request = Net::HTTP::Post.new(uri.path, headers)
+          request.form_data = params
+          request.basic_auth uri.user, uri.password if uri.user
+          response = Net::HTTP.new(uri.host, uri.port).start do |http|
+            http.request(request)
+          end
           capture(response) if recording?
           create_http_client_response(response)
         end
