@@ -6,10 +6,11 @@ module Spec
   module Performance
     module Client
       class HttpClient
-        attr_writer :recording
-        attr_accessor :cookies
+        attr_writer :recording, :cookies
+        attr_reader :base_uri, :cookies
 
-        def initialize
+        def initialize(base_uri)
+          @base_uri = base_uri
           @cookies = {}
           @recording = true
         end

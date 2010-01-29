@@ -9,6 +9,7 @@ describe Spec::Performance::Configuration do
       options.has_key?(:iterations_per_second)
       options.has_key?(:maximum_iteration_time)
       options.has_key?(:performance_driver_class)
+      options.has_key?(:performance_driver_base_uri)
     end
   end
 
@@ -26,6 +27,7 @@ describe Spec::Performance::Configuration do
       configured_options[:maximum_iteration_time].should == default_options[:maximum_iteration_time]
       configured_options[:iterations].should == default_options[:iterations]
       configured_options[:performance_driver_class].should == default_options[:performance_driver_class]
+      configured_options[:performance_driver_base_uri].should == default_options[:performance_driver_base_uri]
     end
   end
 

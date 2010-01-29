@@ -8,7 +8,7 @@ module Spec
         attr_reader :performance_driver
         before(:each) do
           options = Spec::Performance::Configuration.configured_options
-          @performance_driver = options[:performance_driver_class].new
+          @performance_driver = options[:performance_driver_class].new(options[:performance_driver_base_uri])
         end
 
         extend PerformanceExampleGroupMethods

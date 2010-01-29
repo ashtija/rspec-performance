@@ -5,7 +5,7 @@ describe Spec::Performance::Client::HttpClient do
 
   before do
     IntegrationServer.start
-    @client = Spec::Performance::Client::HttpClient.new
+    @client = Spec::Performance::Client::HttpClient.new("http://localhost")
   end
 
   after do

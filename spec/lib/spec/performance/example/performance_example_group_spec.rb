@@ -13,7 +13,7 @@ describe Spec::Performance::Example::PerformanceExampleGroup do
       fake_run_options.reporter.reset
     end
 
-    it "sets a performance_driver attribute once to an instance of the configured class before running each spec" do
+    it "sets a configured performance_driver attribute to an instance of the performance_driver_class before running each spec" do
       driver_instance_in_before_block = nil
       driver_instance_in_first_perform_block = nil
       driver_instance_in_second_perform_block = nil
@@ -34,7 +34,11 @@ describe Spec::Performance::Example::PerformanceExampleGroup do
       fake_run_options.reporter.example_failures.should be_empty
 
       driver_instance_in_first_perform_block.should be_a(Spec::Performance::Client::HttpClient)
+      driver_instance_in_before_block.base_uri.should == "http://localhost/"
+
       driver_instance_in_second_perform_block.should be_a(Spec::Performance::Client::HttpClient)
+      driver_instance_in_second_perform_block.base_uri.should == "http://localhost/"
+
       driver_instance_in_first_perform_block.eql?(driver_instance_in_second_perform_block).should be_false
 
       # the performance_driver from the before block retains the last value it was set to
