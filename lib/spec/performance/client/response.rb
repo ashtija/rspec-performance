@@ -14,6 +14,10 @@ module Spec
         def success?
           @code == 200
         end
+
+        def redirect?
+          @code == 301 || @code == 302
+        end
       end
 
     end
