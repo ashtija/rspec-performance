@@ -1,6 +1,22 @@
 
 IMMEDIATE ITEMS:
 - recording should be able to be turned off
+- better cookie handling in HttpClient.  excluding domain and path as hard coded exclusion values is REALLY janky
+- fail if tests pass too quickly
 
 NEXT STEPS
 - write a CometClient
+
+Notes from talk with Jan:
+=========================
+Capacity planning:
+- Testing conncurrently gives you a better idea of how to plan for capacity
+  (i.e. if we get 40rps vs a production like environment and we need 80rps, then we need to add another box)
+
+CI for performance:
+- One suite that runs against demo
+- One suite that runs against staging
+- Triggered by deployments
+
+Other thoughts:
+- Profiling vs. Benchmarking: profile to find out what actions are slow. Benchmark to for capacity planning.

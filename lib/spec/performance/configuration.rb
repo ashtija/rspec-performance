@@ -27,6 +27,10 @@ module Spec
         @options[:performance_driver_class] = value
       end
 
+      def performance_driver_base_uri=(value)
+        @options[:performance_driver_base_uri] = value
+      end
+
       class << self
         def instance
           @@instance ||= new(default_options)

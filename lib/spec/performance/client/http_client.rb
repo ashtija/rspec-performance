@@ -33,7 +33,9 @@ module Spec
           end
 
           http = Net::HTTP.start(uri.host, uri.port)
-          response = http.get(uri.request_uri, headers)
+          p uri.request_uri
+          p browser_cookies
+          response = http.get(uri.request_uri, { "Cookie: " => browser_cookies })
           http.finish
 
           create_http_client_response(response)
@@ -68,6 +70,13 @@ module Spec
             acc["Cookie"] = cookie.to_s
             acc
           end
+        end
+
+        def browser_cookies
+          cookies_to_send = @cookies.values.reject {|cookie| cookie.name == "path" || cookie.name == "domain" }
+          cookies_to_send.map do |cookie|
+            CGI::escape(cookie.name) + "=" + CGI::escape(cookie.value.first)
+          end.join("&")
         end
 
         def create_http_client_response(net_http_response)
