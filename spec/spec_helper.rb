@@ -13,6 +13,7 @@ require "rspec-performance"
 require "#{dir}/helpers/integration_server"
 
 IntegrationServer.port = 8888
+IntegrationServer.start
 
 Spec::Runner.configure do |config|
   config.mock_with :rr

@@ -4,12 +4,7 @@ describe Spec::Performance::Client::HttpClient do
   attr_reader :client
 
   before do
-    IntegrationServer.start
     @client = Spec::Performance::Client::HttpClient.new("http://localhost")
-  end
-
-  after do
-    IntegrationServer.kill
   end
 
   describe "#initialize" do
@@ -74,7 +69,7 @@ describe Spec::Performance::Client::HttpClient do
 
     it "sends an HTTP get request, sending the current cookies" do
       expected_cookie  = CGI::Cookie.new("cookie-name", "cookie-value")
-      expected_headers = { "Cookie" => expected_cookie.to_s }
+      expected_headers = { "Cookie" => "cookie-name=cookie-value" }
       client.cookies   = { "cookie-name".to_sym => expected_cookie }
 
       mock_http = Object.new

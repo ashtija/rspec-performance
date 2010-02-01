@@ -33,9 +33,7 @@ module Spec
           end
 
           http = Net::HTTP.start(uri.host, uri.port)
-          p uri.request_uri
-          p browser_cookies
-          response = http.get(uri.request_uri, { "Cookie: " => browser_cookies })
+          response = http.get(uri.request_uri, { "Cookie" => browser_cookies })
           http.finish
 
           create_http_client_response(response)

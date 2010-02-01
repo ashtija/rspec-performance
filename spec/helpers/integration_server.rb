@@ -7,6 +7,7 @@ class IntegrationServer
   def initialize(port)
     @server_thread = nil
     @port = port
+    @running = false
   end
 
   def self.base_url
@@ -29,7 +30,13 @@ class IntegrationServer
     @@port = value
   end
 
+  def running?
+    @running
+  end
+
   def start
+    return if running?
+
     Thin::Logging.silent = true
     @server_thread = Thread.new do
       @server = Thin::Server.start('0.0.0.0', @port) do
@@ -43,10 +50,12 @@ class IntegrationServer
       end
     end
     sleep 0.010 unless @server && @server.running?
+    @running = true
   end
 
   def kill
     @server_thread.kill
+    @running = false
   end
 
   private
