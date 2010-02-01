@@ -3,9 +3,10 @@ require "rake"
 require "rake/gempackagetask"
 require "spec/rake/spectask"
 
+load("rspec-performance.gemspec")
+
 task :default => :spec do
 end
-
 
 desc "Runs the rspec-performance ruby specs."
 Spec::Rake::SpecTask.new(:spec) do |t|
@@ -17,5 +18,10 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
+desc "Publish the gem via gem cutter"
+task :publish do
+  system "gem build rspec-performance.gemspec"
+  system "gem push rspec-performance-#{Spec::Performance::VERSION::STRING}.gem"
+end
+
 # Gem packaging tasks
-load("rspec-performance.gemspec")
