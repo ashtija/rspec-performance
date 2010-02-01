@@ -1,6 +1,15 @@
+require "rubygems"
+require "rake"
+require "rake/gempackagetask"
+
 require "#{File.dirname(__FILE__)}/lib/spec/performance/version"
 
 spec = Gem::Specification.new do |s|
+  s.author = "Bob Remeika"
+  s.email = "bob@grockit.com"
+  s.homepage = "http://grockit.com"
+  s.rubyforge_project = "rspec-performance"
+
   s.platform = Gem::Platform::RUBY
   s.summary = "Ruby based make-like utility."
   s.name = "rspec-performance"
