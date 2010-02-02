@@ -40,6 +40,14 @@ module Spec
           create_http_client_response(response)
         end
 
+        def add_header(key, value)
+          @headers[key] = value
+        end
+
+        def remove_header(key)
+          @headers.delete(key)
+        end
+
         def recording?
           @recording
         end
@@ -72,7 +80,7 @@ module Spec
           cookies_to_send = @cookies.values.reject {|cookie| cookie.name == "path" || cookie.name == "domain" }
           cookies_to_send.map do |cookie|
             CGI::escape(cookie.name) + "=" + CGI::escape(cookie.value.first)
-          end.join("&")
+          end.join("; ")
         end
 
         def create_http_client_response(net_http_response)
