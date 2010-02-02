@@ -11,6 +11,7 @@ module Spec
 
         def initialize(base_uri)
           @base_uri = base_uri
+          @headers = {}
           @cookies = {}
           @recording = true
         end
@@ -33,7 +34,7 @@ module Spec
           end
 
           http = Net::HTTP.start(uri.host, uri.port)
-          response = http.get(uri.request_uri, { "Cookie" => browser_cookies })
+          response = http.get(uri.request_uri, headers)
           http.finish
 
           create_http_client_response(response)
@@ -64,10 +65,7 @@ module Spec
         end
 
         def headers
-          @cookies.values.inject({}) do |acc, cookie|
-            acc["Cookie"] = cookie.to_s
-            acc
-          end
+          @headers.merge("Cookie" => browser_cookies)
         end
 
         def browser_cookies

@@ -47,6 +47,10 @@ class IntegrationServer
         map "/cookie_echo" do
           run CookieEchoAdapter.new
         end
+
+        map "/host_echo" do
+          run HostEchoAdapter.new
+        end
       end
     end
     sleep 0.010 unless @server && @server.running?
@@ -76,6 +80,12 @@ class IntegrationServer
       end
       cookie_string = cookies.join("\n")
       [200, { "Set-Cookie" => cookie_string }, ["echo"]]
+    end
+  end
+
+  class HostEchoAdapter
+    def call(env)
+      [200, { 'Content-Type' => 'text/html'}, [env["HTTP_HOST"]]]
     end
   end
 end
