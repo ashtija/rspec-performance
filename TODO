@@ -1,4 +1,12 @@
 
+- implement sanity checking for requests that are redirected
+    - We can no longer just validate HTTP response codes, we need to dig into page internals to verify that the page that was requested is the correct page.  The time required to do this should not count towards the iteration time.
+- implement better debugging
+    - matchers need to output detailed http request and response information in the event of a failure
+- tests should fail when they run too quickly
+- implement redirect following in the http client
+
+
 IMMEDIATE ITEMS:
 - recording should be able to be turned off
 - better cookie handling in HttpClient.  excluding domain and path as hard coded exclusion values is REALLY janky
