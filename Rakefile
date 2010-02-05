@@ -24,4 +24,10 @@ task :publish do
   system "gem push rspec-performance-#{Spec::Performance::VERSION::STRING}.gem"
 end
 
+desc "Runs the integration test server"
+task "integration:run" do
+  require "spec/helpers/integration_server"
+  IntegrationServer.new(8888).run
+end
+
 # Gem packaging tasks

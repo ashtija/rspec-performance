@@ -1,5 +1,6 @@
 require "rubygems"
 require "thin"
+require "cgi"
 
 Thread.abort_on_exception = true
 
@@ -10,26 +11,44 @@ class IntegrationServer
     @running = false
   end
 
-  def self.base_url
-    "http://localhost:#{@@port}/"
+  class << self
+    def base_url
+      "http://localhost:#{@@port}/"
+    end
+
+    def instance
+      @@instance ||= new(@@port)
+    end
+
+    def start
+      instance.start
+    end
+
+    def kill
+      @@instance.kill
+    end
+
+    def port=(value)
+      @@port = value
+    end
   end
 
-  def self.instance
-    @@instance ||= new(@@port)
-  end
+  def run
+    Thin::Server.start('0.0.0.0', @port) do
+      map "/hello" do
+        run HelloAdapter.new
+      end
 
-  def self.start
-    instance.start
-  end
+      map "/cookie_echo" do
+        run CookieEchoAdapter.new
+      end
 
-  def self.kill
-    @@instance.kill
+      map "/host_echo" do
+        run HostEchoAdapter.new
+      end
+    end
   end
-
-  def self.port=(value)
-    @@port = value
-  end
-
+  
   def running?
     @running
   end
@@ -39,19 +58,7 @@ class IntegrationServer
 
     Thin::Logging.silent = true
     @server_thread = Thread.new do
-      @server = Thin::Server.start('0.0.0.0', @port) do
-        map "/hello" do
-          run HelloAdapter.new
-        end
-
-        map "/cookie_echo" do
-          run CookieEchoAdapter.new
-        end
-
-        map "/host_echo" do
-          run HostEchoAdapter.new
-        end
-      end
+      @server = run
     end
     sleep 0.010 unless @server && @server.running?
     @running = true
@@ -73,13 +80,26 @@ class IntegrationServer
 
   class CookieEchoAdapter
     def call(env)
-      cookies = env["rack.input"].read.split(/&/).inject([]) do |acc, pair|
-        name, value = pair.split(/=/).map {|p| CGI::unescape(p) }
+      params = {}
+      params.merge!(parse_raw_params(env["rack.input"].read))
+      params.merge!(parse_raw_params(env["QUERY_STRING"]))
+      
+      cookies = params.inject([]) do |acc, (name, value)|
         acc << CGI::Cookie.new(name, value).to_s
         acc
       end
       cookie_string = cookies.join("\n")
-      [200, { "Set-Cookie" => cookie_string }, ["echo"]]
+      [200, { "Set-Cookie" => cookie_string }, ["echo: " + cookie_string]]
+    end
+    
+    def parse_raw_params(input)
+      return {} if input.empty?
+      
+      input.split(/&/).inject({}) do |parsed, pair|
+        name, value = pair.split(/\=/).map {|p| CGI::unescape(p) }
+        parsed[name] = value
+        parsed
+      end
     end
   end
 
