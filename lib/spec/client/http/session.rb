@@ -1,4 +1,5 @@
-require "spec/client/http/request"
+require "spec/client/http/get_request"
+require "spec/client/http/post_request"
 require "spec/client/http/response"
 require "spec/client/http/cookie_jar"
 
@@ -13,11 +14,11 @@ module Spec
         end
         
         def get(url, params = {})
-          execute(GetRequest.new(url, params, request_headers(url)))
+          execute(Request.new(url, "GET", params, request_headers(url)))
         end
         
         def post(url, params = {})
-          execute(PostRequest.new(url, params, request_headers(url)))
+          execute(Request.new(url, "POST", params, request_headers(url)))
         end
         
         def request_headers(url)
