@@ -39,6 +39,11 @@ module Spec
           cookies.values.flatten
         end
 
+
+        def to_s(url = nil)
+          ""
+        end
+
         class << self
           def origin_for(url_or_uri)
             # FIXME: This function fails horribly for TLDS like gaurdian.co.uk

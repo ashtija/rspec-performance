@@ -11,6 +11,7 @@ module Spec
         
         def execute
           @response = request.execute
+          self
         end
         
         def success?

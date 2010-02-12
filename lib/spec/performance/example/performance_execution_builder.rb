@@ -41,6 +41,7 @@ module Spec
                 maximum_iteration_time = _calculate_average(current_iteration - 1, maximum_iteration_time, iteration_run_time)
               end
             end
+
             [example_run_time, maximum_iteration_time]
           end
 

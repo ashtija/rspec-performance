@@ -3,9 +3,12 @@ module Spec
     module Http
       module Driver
         module CurlDriver
-          def execute_http_driver_request(url, method, headers, params)
-            request_url = url       # Workaround for bug in curl
-            if method == "GET" && encoded_params = url_encoded_params
+          def driver_execute(url, method, headers, params)
+            # Workaround for potential bug in curl
+            request_url = url
+            encoded_params = url_encoded_params
+
+            if method == "GET"
               request_url += "?#{encoded_params}"
             end
 
@@ -28,7 +31,12 @@ module Spec
               body.size
             end
 
-            curl.http_get
+            case method.upcase
+            when "GET"
+              curl.http_get
+            when "POST"
+              curl.http_post(encoded_params)
+            end
 
             response = Response.new
             response.code = curl.response_code

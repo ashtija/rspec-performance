@@ -5,7 +5,6 @@ module Spec
     module Example
 
       module PerformanceExampleGroupMethods
-
         def perform(description, options = {}, backtrace = nil, &implementation)
           options = Spec::Performance::Configuration.configured_options.merge(options)
 

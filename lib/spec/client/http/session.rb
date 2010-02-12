@@ -1,15 +1,16 @@
-require "spec/client/http/get_request"
-require "spec/client/http/post_request"
+require "spec/client/http/request"
 require "spec/client/http/response"
+require "spec/client/http/transaction"
 require "spec/client/http/cookie_jar"
 
 module Spec
   module Client
     module Http
       class Session
-        attr_reader :cookie_jar
+        attr_reader :client, :cookie_jar
         
-        def initialize(options = {})
+        def initialize(client, options = {})
+          @client = client
           @cookie_jar = CookieJar.new
         end
         
@@ -22,19 +23,16 @@ module Spec
         end
         
         def request_headers(url)
-          raise "not implemented"
-          uri = URI.parse(url)
-          { "Cookie" => cookie_jar.to_s(uri.domain, uri.path) }
+          { "Cookie" => cookie_jar.to_s(url) }
         end
-        
-        private
-        
+
         def execute(request)
-          raise "not implemented"
-          transaction = Transaction.new(request).execute
-          transaction.response.cookies.each do |cookie|
-            cookie_jar.add(cookie)
-          end
+          transaction = Transaction.new(request)
+          transaction.execute
+#          transaction.response.cookies.each do |cookie|
+#            cookie_jar.add(cookie)
+#          end
+          transaction
         end
       end
     end

@@ -33,10 +33,10 @@ describe Spec::Performance::Example::PerformanceExampleGroup do
       example_group.run(fake_run_options)
       fake_run_options.reporter.example_failures.should be_empty
 
-      driver_instance_in_first_perform_block.should be_a(Spec::Performance::Client::HttpClient)
+      driver_instance_in_first_perform_block.should be_a(Spec::Client::HttpClient)
       driver_instance_in_before_block.base_uri.should == "http://localhost/"
 
-      driver_instance_in_second_perform_block.should be_a(Spec::Performance::Client::HttpClient)
+      driver_instance_in_second_perform_block.should be_a(Spec::Client::HttpClient)
       driver_instance_in_second_perform_block.base_uri.should == "http://localhost/"
 
       driver_instance_in_first_perform_block.eql?(driver_instance_in_second_perform_block).should be_false

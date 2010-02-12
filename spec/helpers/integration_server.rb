@@ -13,7 +13,7 @@ class IntegrationServer
 
   class << self
     def base_url
-      "http://localhost:#{@@port}/"
+      "http://127.0.0.1:#{@@port}/"
     end
 
     def instance

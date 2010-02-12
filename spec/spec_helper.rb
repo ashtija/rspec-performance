@@ -2,7 +2,7 @@ begin
   require "spec"
 rescue LoadError
   require "rubygems" unless ENV["NO_RUBYGEMS"]
-  gem "rspec"
+  gem "spec"
   require "spec"
 end
 

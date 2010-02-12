@@ -3,12 +3,11 @@ require "spec/client/http/session"
 module Spec
   module Client
     class HttpClient
-      
       attr_reader :session
       
       def initialize(base_uri)
         @base_uri = base_uri
-        @session = Session.new
+        @session = Http::Session.new(self)
       end
       
       def get(path, params = {})

@@ -6,7 +6,7 @@ describe Spec::Client::Http::Request do
     @url = "http://www.example.com"
     @params = { "some[param]" => "encode me", "ok" => "done" }
     @headers = { "Cookie", "hey=now" }
-    @request = Spec::Client::Http::Request.new(url, params, headers)
+    @request = Spec::Client::Http::Request.new(url, "GET", params, headers)
   end
 
   describe "#initialize" do
@@ -28,7 +28,7 @@ describe Spec::Client::Http::Request do
 
     describe "when there are no params" do
       it "returns nil" do
-        request = Spec::Client::Http::Request.new(url, {}, headers)
+        request = Spec::Client::Http::Request.new(url, "GET", {}, headers)
         request.url_encode_params.should be_nil
       end
     end
@@ -38,12 +38,6 @@ describe Spec::Client::Http::Request do
     it "makes an http request via the driver mixin" do
       mock(request).driver_execute(url, "GET", headers, params)
       response = request.execute
-    end
-  end
-
-  describe "#execute_http_driver_request" do
-    it "raises a NotImplementedError" do
-      lambda { request.driver_execute }.should raise_error(NotImplementedError)
     end
   end
 end

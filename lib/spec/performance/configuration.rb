@@ -50,7 +50,7 @@ module Spec
               :iterations => 20,
               :iterations_per_second => nil,
               :maximum_iteration_time => nil,
-              :performance_driver_class => Spec::Performance::Client::HttpClient,
+              :performance_driver_class => Spec::Client::HttpClient,
               :performance_driver_base_uri => "http://localhost/"
           }
         end
