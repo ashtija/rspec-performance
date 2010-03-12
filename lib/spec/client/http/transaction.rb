@@ -19,6 +19,7 @@ module Spec
         end
 
         def redirect?
+          (300..399).include? @response.code
         end
       end
     end

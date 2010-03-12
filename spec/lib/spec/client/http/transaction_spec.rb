@@ -46,5 +46,31 @@ describe Spec::Client::Http::Transaction do
   end
 
   describe "#redirect?" do
+     describe "when the response code is an http redirect code" do
+      before do
+        response.code = 302
+        mock(request).execute { response }
+      end
+
+      it "returns true" do
+        transaction = Spec::Client::Http::Transaction.new(request)
+        transaction.execute
+        transaction.should be_redirect
+      end
+    end
+
+    describe "when the response code is NOT an http redirect code" do
+      before do
+        response.code = 400
+        mock(request).execute { response }
+      end
+
+      it "returns false" do
+        transaction = Spec::Client::Http::Transaction.new(request)
+        transaction.execute
+        transaction.should_not be_redirect
+      end
+    end
+
   end
 end
