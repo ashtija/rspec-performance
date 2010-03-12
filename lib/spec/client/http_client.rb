@@ -3,7 +3,7 @@ require "spec/client/http/session"
 module Spec
   module Client
     class HttpClient
-      attr_reader :session
+      attr_reader :session, :base_uri
       
       def initialize(base_uri)
         @base_uri = base_uri
@@ -19,7 +19,7 @@ module Spec
       end
       
       def full_url(path)
-        raise "not implemented"
+        URI.join(base_uri, path).to_s
       end
       
     end
