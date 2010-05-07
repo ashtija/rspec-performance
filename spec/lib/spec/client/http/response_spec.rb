@@ -4,7 +4,7 @@ describe Spec::Client::Http::Response do
   describe "#cookies" do
     attr_reader :response
     before do
-      @response = Spec::Client::Http::Response.new
+      @response = Spec::Client::Http::Response.new("http://www.example.com")
       response.headers = { "Set-Cookie" => ["foo=bar", "baz=bang; domain=.example.com"] }
     end
 
@@ -16,10 +16,10 @@ describe Spec::Client::Http::Response do
       actual.expires.should == expected.expires
     end
 
-    it "returns an array of Spec::Client::Http::Cookies" do
+    it "returns an array of cookies" do
       response.cookies.size.should == 2
-      assert_cookies_equal(response.cookies.first, Spec::Client::Http::Cookie.parse("foo=bar"))
-      assert_cookies_equal(response.cookies.last, Spec::Client::Http::Cookie.parse("baz=bang; domain=.example.com"))
+      assert_cookies_equal(response.cookies.first, Mechanize::Cookie::parse(URI::parse("http://www.example.com"), "foo=bar") {|c| c}.first)
+      assert_cookies_equal(response.cookies.last, Mechanize::Cookie::parse(URI::parse("http://www.example.com"), "baz=bang; domain=.example.com"){|c| c}.first)
     end
   end
 end

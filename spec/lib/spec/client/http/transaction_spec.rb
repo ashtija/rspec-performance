@@ -4,7 +4,7 @@ describe Spec::Client::Http::Transaction do
   attr_reader :request, :response
   before do
     @request = Spec::Client::Http::Request.new("http://example.com", "GET", {}, {})
-    @response = Spec::Client::Http::Response.new
+    @response = Spec::Client::Http::Response.new(@request.url)
   end
 
   describe "#execute" do

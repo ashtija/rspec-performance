@@ -1,7 +1,8 @@
 require "spec/client/http/request"
 require "spec/client/http/response"
 require "spec/client/http/transaction"
-require "spec/client/http/cookie_jar"
+require "mechanize"
+require "uri"
 
 module Spec
   module Client
@@ -11,7 +12,7 @@ module Spec
         
         def initialize(client, options = {})
           @client = client
-          @cookie_jar = CookieJar.new
+          @cookie_jar = Mechanize::CookieJar.new
         end
         
         def get(url, params = {})
@@ -23,15 +24,15 @@ module Spec
         end
         
         def request_headers(url)
-          { "Cookie" => cookie_jar.to_s(url) }
+          { "Cookie" => cookie_jar.cookies(URI::parse(url)) }
         end
 
         def execute(request)
           transaction = Transaction.new(request)
           transaction.execute
-#          transaction.response.cookies.each do |cookie|
-#            cookie_jar.add(cookie)
-#          end
+          transaction.response.cookies.each do |cookie|
+            cookie_jar.add(URI::parse(transaction.request.url),cookie)
+          end
           transaction
         end
       end

@@ -11,6 +11,7 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = "rspec-performance"
 
   s.platform = Gem::Platform::RUBY
+
   s.summary = "Ruby based make-like utility."
   s.name = "rspec-performance"
   s.version = Spec::Performance::VERSION::STRING
@@ -19,6 +20,7 @@ spec = Gem::Specification.new do |s|
   s.files = Dir["lib/**/*.rb"] + Dir["spec/**/*.rb"] + ["Rakefile", "README"]
   s.description = "rspec-performance adds a couple of utility methods for unit testing performance"
 end
+spec.add_dependency('mechanize', '>= 1.0.0')
 
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.need_zip = true

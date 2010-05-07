@@ -17,25 +17,8 @@ describe Spec::Client::Http::Request do
     end
   end
 
-  describe "#url_encode_params" do
-    describe "when there are params" do
-      it "creates a url encoded query string" do
-        request.url_encode_params.should include("some%5Bparam%5D=encode+me")
-        request.url_encode_params.should include("ok=done")
-        request.url_encode_params.should include("&")
-      end
-    end
-
-    describe "when there are no params" do
-      it "returns nil" do
-        request = Spec::Client::Http::Request.new(url, "GET", {}, headers)
-        request.url_encode_params.should be_nil
-      end
-    end
-  end
-
   describe "#execute" do
-    it "makes an http request via the driver mixin" do
+    it "makes an http request via the driver" do
       mock(request).driver_execute(url, "GET", headers, params)
       response = request.execute
     end

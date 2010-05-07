@@ -5,18 +5,19 @@ module Spec
   module Client
     module Http
       class Request
-        include Driver::CurlDriver
-
         attr_accessor :url, :method, :params, :headers
 
-        def initialize(url, method, params, headers)
-          @url, @method, @params, @headers = url, method, params, headers
+        def initialize(url, method, params, headers, driver=Driver::CurlDriver.new)
+          @url, @method, @params, @headers, @driver = url, method, params, headers, driver
         end
 
         def execute
-          driver_execute(url, method, headers, params)
+          driver_execute(url,method,headers,params)
         end
 
+        def driver_execute(url,method,headers,params)
+          @driver.execute(url,method,headers,params)
+        end
       end
     end
   end
