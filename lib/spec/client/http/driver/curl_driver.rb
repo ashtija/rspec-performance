@@ -1,12 +1,30 @@
+require 'rubygems'
+require 'curb'
+require 'uri'
+require 'cgi'
+
 module Spec
   module Client
     module Http
       module Driver
         module CurlDriver
+          def url_encode_params(params)
+            return nil if params.empty?
+
+            params.inject([]) do |query, (name, value)|
+              # TODO: come up with a better way to deal with true and false parameters
+              query << [name,value].collect {|s| s.nil? ? "" : s==false ? "0" : s==true ? "1" : CGI.escape(s.to_s)}.join('=')
+            end.join("&")
+          end
+
+
           def driver_execute(url, method, headers, params)
             # Workaround for potential bug in curl
             request_url = url
-            encoded_params = url_encoded_params
+            encoded_params = url_encode_params(params)
+
+#            puts request_url
+#            puts encoded_params
 
             if method == "GET"
               request_url += "?#{encoded_params}"
@@ -26,6 +44,7 @@ module Spec
               size
             end
 
+            body_content = ""
             curl.on_body do |body|
               body_content += body
               body.size
@@ -42,6 +61,20 @@ module Spec
             response.code = curl.response_code
             response.headers = response_headers
             response.body = body_content
+
+#            p response
+#            puts "*"*40
+#            puts "*"*10 + " CODE " + "*"*10
+#            puts "*"*40
+#            puts response.code
+#            puts "*"*40
+#            puts "*"*10 + " HEADERS " + "*"*10
+#            puts "*"*40
+#            puts response.headers
+#            puts "*"*40
+#            puts "*"*10 + " BODY " + "*"*10
+#            puts "*"*40
+#            puts response.body
 
             response
           end
