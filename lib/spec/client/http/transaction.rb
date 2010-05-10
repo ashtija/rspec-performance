@@ -1,3 +1,5 @@
+require "spec/client/http/matcher/transaction_matchers"
+
 module Spec
   module Client
     module Http
@@ -20,7 +22,7 @@ module Spec
 
         def redirect?
           (300..399).include? @response.code
-        end
+        end        
       end
     end
   end

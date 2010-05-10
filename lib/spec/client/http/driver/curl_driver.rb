@@ -3,6 +3,8 @@ require 'curb'
 require 'uri'
 require 'cgi'
 
+# TODO: make an abstract parent driver class, and a spec for it
+
 module Spec
   module Client
     module Http

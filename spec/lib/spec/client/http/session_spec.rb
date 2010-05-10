@@ -36,7 +36,7 @@ describe Spec::Client::Http::Session do
       session = Spec::Client::Http::Session.new(client)
       mock(session).execute(anything) do |request|
         request.should be_a(Spec::Client::Http::Request)
-        request.method.should == "GET"
+        request.request_method.should == "GET"
       end
 
       session.get("http://127.0.0.1", {})
@@ -48,7 +48,7 @@ describe Spec::Client::Http::Session do
       session = Spec::Client::Http::Session.new(client)
       mock(session).execute(anything) do |request|
         request.should be_a(Spec::Client::Http::Request)
-        request.method.should == "POST"        
+        request.request_method.should == "POST"        
       end
       session.post("http://127.0.0.1", {})
     end
