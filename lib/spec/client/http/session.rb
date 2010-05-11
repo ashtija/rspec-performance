@@ -24,7 +24,7 @@ module Spec
         end
         
         def request_headers(url)
-          { "Cookie" => cookie_jar.cookies(URI::parse(url)) }
+          { "Cookie" => @cookie_jar.cookies(URI::parse(url)) }
         end
 
         def execute(request)

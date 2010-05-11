@@ -11,6 +11,10 @@ module Spec
           @url, @request_method, @params, @headers, @driver = url, request_method, params, headers, driver
         end
 
+        def url_encoded_params
+          @driver.url_encode_params(params)
+        end
+
         def execute
           driver_execute(url,request_method,headers,params)
         end

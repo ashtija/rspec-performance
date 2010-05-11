@@ -12,15 +12,15 @@ describe Spec::Client::Http::Driver::CurlDriver do
   describe "#url_encode_params" do
     describe "when there are params" do
       it "creates a url encoded query string" do
-        Spec::Client::Http::Driver::CurlDriver::url_encode_params(params).should include("some%5Bparam%5D=encode+me")
-        Spec::Client::Http::Driver::CurlDriver::url_encode_params(params).should include("ok=done")
-        Spec::Client::Http::Driver::CurlDriver::url_encode_params(params).should include("&")
+        @driver.url_encode_params(params).should include("some%5Bparam%5D=encode+me")
+        @driver.url_encode_params(params).should include("ok=done")
+        @driver.url_encode_params(params).should include("&")
       end
     end
 
     describe "when there are no params" do
       it "returns nil" do
-        Spec::Client::Http::Driver::CurlDriver::url_encode_params({}).should be_nil
+        @driver.url_encode_params({}).should be_nil
       end
     end
   end

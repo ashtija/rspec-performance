@@ -14,8 +14,10 @@ module Spec
             def transaction_info
                 "Request: #{transaction.request.url} using #{transaction.request.request_method}" + "\n" +
                 "  sent headers: #{transaction.request.headers}" + "\n" +
+                "  sent params: #{transaction.request.url_encoded_params}" + "\n" +
                 "Response code: #{transaction.response.code}" + "\n" +
-                "  with cookies: #{transaction.response.cookies}"
+                "  with cookies: #{transaction.response.cookies}" + "\n" +
+                "  with html body: #{transaction.response.body}"
             end
 
             def failure_message

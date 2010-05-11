@@ -10,7 +10,7 @@ module Spec
     module Http
       module Driver
         class CurlDriver
-          def self.url_encode_params(params)
+          def url_encode_params(params)
             return nil if params.empty?
 
             params.inject([]) do |query, (name, value)|
@@ -25,10 +25,7 @@ module Spec
           def execute(url, method, headers, params)
             # Workaround for potential bug in curl
             request_url = url
-            encoded_params = CurlDriver::url_encode_params(params)
-
-#            puts request_url
-#            puts encoded_params
+            encoded_params = url_encode_params(params)
 
             if method == "GET"
               request_url += "?#{encoded_params}"
@@ -65,21 +62,6 @@ module Spec
             response.code = curl.response_code
             response.headers = response_headers
             response.body = body_content
-
-#            p response
-#            puts "*"*40
-#            puts "*"*10 + " CODE " + "*"*10
-#            puts "*"*40
-#            puts response.code
-#            puts "*"*40
-#            puts "*"*10 + " HEADERS " + "*"*10
-#            puts "*"*40
-#            puts response.headers
-#            puts "*"*40
-#            puts "*"*10 + " BODY " + "*"*10
-#            puts "*"*40
-#            puts response.body
-
             response
           end
         end
