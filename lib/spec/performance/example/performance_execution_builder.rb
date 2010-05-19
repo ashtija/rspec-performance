@@ -35,8 +35,6 @@ module Spec
             maximum_iteration_time = 0.0
             example_run_time = _timed_operation EXAMPLE_RUN_TIME_LABEL do
               (1..iterations_per_slice).each do |current_iteration|
-                # TODO: there is almost certainly a better way to get a new performance driver at each iteration...
-                @performance_driver = options[:performance_driver_class].new(options[:performance_driver_base_uri])
                 iteration_run_time = _timed_operation ITERATION_RUN_TIME_LABEL do
                   instance_eval(&implementation)
                 end

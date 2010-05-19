@@ -10,6 +10,10 @@ module Spec
         @base_uri = base_uri
         @session = Http::Session.new(self)
       end
+
+      def new_session()
+        @session = Http::Session.new(self)
+      end
       
       def get(path, params = {})
         session.get(full_url(path), params)
