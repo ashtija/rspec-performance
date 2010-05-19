@@ -60,10 +60,16 @@ describe Spec::Client::Http::Matcher::TransactionMatchers do
 
     describe "#matches?" do
       describe "transaction is a redirect" do
-        it "returns true"
+        it "returns true" do
+          stub(transaction).redirect? {true}
+          matcher.matches?(transaction).should be_true
+        end
       end
       describe "transaction is not a redirect" do
-        it "returns false"
+        it "returns false" do
+          stub(transaction).redirect? {false}
+          matcher.matches?(transaction).should be_false
+        end
       end
     end
 
@@ -96,10 +102,16 @@ describe Spec::Client::Http::Matcher::TransactionMatchers do
 
     describe "#matches?" do
       describe "transaction is successful" do
-        it "returns true"
+        it "returns true" do
+          stub(transaction).success? {true}
+          matcher.matches?(transaction).should be_true
+        end
       end
       describe "transaction is not successful" do
-        it "returns false"
+        it "returns false" do
+          stub(transaction).success? {false}
+          matcher.matches?(transaction).should be_false
+        end
       end
     end
 

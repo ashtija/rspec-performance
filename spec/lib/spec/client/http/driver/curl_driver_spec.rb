@@ -27,12 +27,20 @@ describe Spec::Client::Http::Driver::CurlDriver do
 
   describe "#execute" do
     describe "when the request is a GET" do
-      it "makes a get request"
-#        mock(Curl::Easy::http_get)
-#        driver.execute(url, "GET", headers, params)
+      it "makes a get request" do
+        curler = mock(Curl::Easy.new(@url))
+        stub(Curl::Easy).new {curler}
+        curler.http_get
+        driver.execute(url, "GET", headers, params)
+      end
     end
     describe "when the request is a POST" do
-      it "makes a post request"
+      it "makes a post request" do
+        curler = mock(Curl::Easy.new(@url))
+        stub(Curl::Easy).new {curler}
+        curler.http_post(anything)
+        driver.execute(url, "POST", headers, params)
+      end
     end    
   end
 end

@@ -84,7 +84,7 @@ describe Spec::Performance::Example::PerformanceExampleGroupMethods do
           it "reports the success" do
             example_group.perform("reports the success", spec_options) { 1.should == 1 }
             example_group.run(fake_run_options)
-            
+
             fake_run_options.reporter.example_failures.should be_empty
             example = fake_run_options.reporter.example_successes.first
             example.description.should == "reports the success" 
